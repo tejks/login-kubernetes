@@ -1,0 +1,30 @@
+apiVersion: skaffold/v2beta12
+kind: Config
+metadata:
+  name: login-management
+deploy:
+  kubectl:
+    manifests:
+    # - ./k8s/auth-redis-config.yaml
+    - ./k8s/nats/*
+    - ./k8s/redis/*
+    - ./k8s/auth/*
+    - ./k8s/email-worker/*
+    - ./k8s/ingress/*
+    # - ./k8s/client-config.yaml
+build:
+  local:
+      push: false
+  artifacts:
+  - image: tejks/lm-auth
+    context: auth
+    docker:
+      dockerfile: Dockerfile
+  - image: tejks/lm-email-worker
+    context: email-worker
+    docker:
+      dockerfile: Dockerfile
+  # - image: tejks/lm-client
+  #   context: client
+  #   docker:
+  #     dockerfile: Dockerfile
